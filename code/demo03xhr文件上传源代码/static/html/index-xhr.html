@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div>
+      选择文件(可多选):
+      <input type="file" id="f1" multiple/><br/><br/>
+      <button type="button" id="btn-submit">上 传</button>
+    </div>
+    <script>
+      // 定义上传文件事件
+      function submitUpload () {
+        // 获的文件列表 这是是文件对象不是数组
+        let fileList = document.querySelector('#f1').files
+        // console.log(fileList)
+        if (!fileList.length) return alert('请选择文件')
+        // 构造FormData对象
+        let fd = new FormData()
+        // fd.append('title', document.querySelector('#title').value)
+        // 多文件上传 需要遍历添加到fd对象中
+        for (let i = 0; i < fileList.length; i++) {
+          fd.append('f1', fileList[i]) // 支持多文件上传
+        }
+        // xhr上传
+        let xhr = new XMLHttpRequest() // 创建对象
+        xhr.open('POST', 'http://localhost:8100/', true)
+        xhr.send(fd) // 发送是默认Content-Type是 multipart/form-data
+        xhr.onreadystatechange = function () {
+          if (this.readyState == 4 && this.status == 200) {
+            let obj = JSON.parse(xhr.responseText)
+            console.log(obj)
+          }
+        }
+      }
+      // 绑定点击事件
+      document.getElementById('btn-submit').addEventListener('click',submitUpload)
+    </script>
+</html>
