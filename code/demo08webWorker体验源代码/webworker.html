@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>webworker使用体验</title>
+</head>
+<body>
+  <script>
+    // 1. 主线程的使用
+    // 1.1. Worker()构造函数的参数是一个脚本文件，该文件就是 Worker 线程所要执行的任务。由于 Worker 不能读取本地文件，所以这个脚本必须来自网络
+    var worker = new Worker('work.js')
+    // 1.2. 主线程调用worker.postMessage()方法，向 Worker 发消息
+    // worker.postMessage()方法的参数，就是主线程传给 Worker 的数据。它可以是各种数据类型，包括二进制数据
+    worker.postMessage({data: '哈哈'})
+    // 1.3. 主线程通过worker.onmessage指定监听函数，接收子线程发回来的消息。
+    worker.onmessage = function (data) {
+      console.log('work.js子线程传递过来数据啦')
+      console.log(data)
+    }
+    // 主线程与 Worker 之间也可以交换二进制数据，比如 File、Blob、ArrayBuffer 等类型
+    // 1.4. Worker 完成任务以后，主线程就可以把它关掉
+    // worker.terminate()
+  </script>
+</body>
+</html>
